@@ -1,40 +1,20 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Login - JTF Imóveis</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-
-    <!-- Menu de navegação -->
-    <nav>
-        <a href="{{ url_for('index') }}">🏠 Início</a>
-        <a href="{{ url_for('register') }}">📝 Registrar</a>
-    </nav>
-
-    <header style="text-align: center;">
-        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo JTF" style="width: 150px;">
-        <h1>JTF - Corretor de Imóveis</h1>
-    </header>
-
-    <div class="container">
-        <h2>Login</h2>
-
-        {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
-
-        <form method="POST">
-            <label>Usuário:</label>
-            <input type="text" name="username" required>
-
-            <label>Senha:</label>
-            <input type="password" name="password" required>
-
-            <input type="submit" value="Entrar">
-        </form>
+{% extends "base.html" %}
+{% block title %}Login - JTF Imóveis{% endblock %}
+{% block content %}
+<div class="form-container">
+    <h2>Acesse sua Conta</h2>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    <form method="POST">
+        <label for="username">Usuário:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password" required>
+        <input type="submit" value="Entrar">
+    </form>
+    <div class="register-link">
+        <p>Não tem uma conta? <a href="{{ url_for('register') }}">Cadastre-se aqui</a></p>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

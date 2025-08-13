@@ -1,53 +1,127 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>JTF - Corretor de Imóveis</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
-    <!-- Menu de navegação -->
-    <nav>
-        <a href="{{ url_for('index') }}">🏠 Início</a>
-        {% if session.get('username') %}
-            <a href="{{ url_for('cadastro_imovel') }}">📌 Cadastrar Imóvel</a>
-            {% if session.get('is_admin') == 1 %}
-                <a href="{{ url_for('admin_imoveis') }}">⚙ Painel Admin</a>
-            {% endif %}
-            <span style="color:white;">👤 {{ session['username'] }}</span>
-            <a href="{{ url_for('logout') }}">🚪 Sair</a>
-        {% else %}
-            <a href="{{ url_for('login') }}">🔑 Login</a>
-            <a href="{{ url_for('register') }}">📝 Registrar</a>
-        {% endif %}
-    </nav>
+{% block title %}Lista de Imóveis - JTF Imóveis{% endblock %}
 
-    <header style="text-align: center;">
-        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo JTF" style="width: 150px;">
-        <h1>JTF - Corretor de Imóveis</h1>
-    </header>
+{% block content %}
+<div class="container">
 
-    <div class="container">
-        <h2>Lista de Imóveis</h2>
-
-        {% if imoveis %}
-            {% for imovel in imoveis %}
-                <div class="imovel">
-                    {% if imovel.fotos %}
-                        {% set fotos = imovel.fotos.split(',') %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ fotos[0]) }}" alt="Foto do imóvel">
-                    {% endif %}
-                    <div class="imovel-info">
-                        <strong>{{ imovel.titulo }}</strong> - R$ {{ "%.2f"|format(imovel.preco) }}<br>
-                        {{ imovel.descricao }}
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>Nenhum imóvel cadastrado..</p>
-        {% endif %}
-    </div>
-
-</body>
-</html>
+    <section class="filter-section">
+        <div class="filter-group">
+            <label for="tipo">Tipo de Imóvel</label>
+            <select id="tipo" name="tipo">
+                <option value="">Todos</option>
+                <option value="Casa">Casa</option>
+                <option value="Apartamento">Apartamento</option>
+                <option value="Comercial">Comercial</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="cidade">Cidade</label>
+            <select id="cidade" name="cidade">
+                <option value="">Todas as cidades</option>
+                <option value="Acorizal">Acorizal</option>
+                <option value="Água Boa">Água Boa</option>
+                <option value="Alta Floresta">Alta Floresta</option>
+                <option value="Alto Araguaia">Alto Araguaia</option>
+                <option value="Alto Boa Vista">Alto Boa Vista</option>
+                <option value="Alto Garças">Alto Garças</option>
+                <option value="Alto Paraguai">Alto Paraguai</option>
+                <option value="Alto Taquari">Alto Taquari</option>
+                <option value="Apiacás">Apiacás</option>
+                <option value="Araguaiana">Araguaiana</option>
+                <option value="Araguainha">Araguainha</option>
+                <option value="Araputanga">Araputanga</option>
+                <option value="Arenápolis">Arenápolis</option>
+                <option value="Aripuanã">Aripuanã</option>
+                <option value="Barão de Melgaço">Barão de Melgaço</option>
+                <option value="Barra do Bugres">Barra do Bugres</option>
+                <option value="Barra do Garças">Barra do Garças</option>
+                <option value="Bom Jesus do Araguaia">Bom Jesus do Araguaia</option>
+                <option value="Brasnorte">Brasnorte</option>
+                <option value="Cáceres">Cáceres</option>
+                <option value="Campinápolis">Campinápolis</option>
+                <option value="Campo Novo do Parecis">Campo Novo do Parecis</option>
+                <option value="Campo Verde">Campo Verde</option>
+                <option value="Campos de Júlio">Campos de Júlio</option>
+                <option value="Canabrava do Norte">Canabrava do Norte</option>
+                <option value="Canarana">Canarana</option>
+                <option value="Carlinda">Carlinda</option>
+                <option value="Castanheira">Castanheira</option>
+                <option value="Chapada dos Guimarães">Chapada dos Guimarães</option>
+                <option value="Cláudia">Cláudia</option>
+                <option value="Cocalinho">Cocalinho</option>
+                <option value="Colíder">Colíder</option>
+                <option value="Colniza">Colniza</option>
+                <option value="Comodoro">Comodoro</option>
+                <option value="Confresa">Confresa</option>
+                <option value="Conquista d'Oeste">Conquista d'Oeste</option>
+                <option value="Cotriguaçu">Cotriguaçu</option>
+                <option value="Cuiabá">Cuiabá</option>
+                <option value="Curvelândia">Curvelândia</option>
+                <option value="Denise">Denise</option>
+                <option value="Diamantino">Diamantino</option>
+                <option value="Dom Aquino">Dom Aquino</option>
+                <option value="Feliz Natal">Feliz Natal</option>
+                <option value="Figueirópolis d'Oeste">Figueirópolis d'Oeste</option>
+                <option value="Gaúcha do Norte">Gaúcha do Norte</option>
+                <option value="General Carneiro">General Carneiro</option>
+                <option value="Glória d'Oeste">Glória d'Oeste</option>
+                <option value="Guarantã do Norte">Guarantã do Norte</option>
+                <option value="Guiratinga">Guiratinga</option>
+                <option value="Indiavaí">Indiavaí</option>
+                <option value="Ipiranga do Norte">Ipiranga do Norte</option>
+                <option value="Itanhangá">Itanhangá</option>
+                <option value="Itaúba">Itaúba</option>
+                <option value="Itiquira">Itiquira</option>
+                <option value="Jaciara">Jaciara</option>
+                <option value="Jangada">Jangada</option>
+                <option value="Jauru">Jauru</option>
+                <option value="Juara">Juara</option>
+                <option value="Juína">Juína</option>
+                <option value="Juruena">Juruena</option>
+                <option value="Juscimeira">Juscimeira</option>
+                <option value="Lambari d'Oeste">Lambari d'Oeste</option>
+                <option value="Lucas do Rio Verde">Lucas do Rio Verde</option>
+                <option value="Luciara">Luciara</option>
+                <option value="Marcelândia">Marcelândia</option>
+                <option value="Matupá">Matupá</option>
+                <option value="Mirassol d'Oeste">Mirassol d'Oeste</option>
+                <option value="Nobres">Nobres</option>
+                <option value="Nortelândia">Nortelândia</option>
+                <option value="Nossa Senhora do Livramento">Nossa Senhora do Livramento</option>
+                <option value="Nova Bandeirantes">Nova Bandeirantes</option>
+                <option value="Nova Brasilândia">Nova Brasilândia</option>
+                <option value="Nova Canaã do Norte">Nova Canaã do Norte</option>
+                <option value="Nova Guarita">Nova Guarita</option>
+                <option value="Nova Lacerda">Nova Lacerda</option>
+                <option value="Nova Marilândia">Nova Marilândia</option>
+                <option value="Nova Maringá">Nova Maringá</option>
+                <option value="Nova Monte Verde">Nova Monte Verde</option>
+                <option value="Nova Mutum">Nova Mutum</option>
+                <option value="Nova Nazaré">Nova Nazaré</option>
+                <option value="Nova Olímpia">Nova Olímpia</option>
+                <option value="Nova Santa Helena">Nova Santa Helena</option>
+                <option value="Nova Ubiratã">Nova Ubiratã</option>
+                <option value="Nova Xavantina">Nova Xavantina</option>
+                <option value="Novo Horizonte do Norte">Novo Horizonte do Norte</option>
+                <option value="Novo Mundo">Novo Mundo</option>
+                <option value="Novo Santo Antônio">Novo Santo Antônio</option>
+                <option value="Novo São Joaquim">Novo São Joaquim</option>
+                <option value="Paranaíta">Paranaíta</option>
+                <option value="Paranatinga">Paranatinga</option>
+                <option value="Pedra Preta">Pedra Preta</option>
+                <option value="Peixoto de Azevedo">Peixoto de Azevedo</option>
+                <option value="Planalto da Serra">Planalto da Serra</option>
+                <option value="Poconé">Poconé</option>
+                <option value="Pontal do Araguaia">Pontal do Araguaia</option>
+                <option value="Ponte Branca">Ponte Branca</option>
+                <option value="Pontes e Lacerda">Pontes e Lacerda</option>
+                <option value="Porto Alegre do Norte">Porto Alegre do Norte</option>
+                <option value="Porto dos Gaúchos">Porto dos Gaúchos</option>
+                <option value="Porto Esperidião">Porto Esperidião</option>
+                <option value="Porto Estrela">Porto Estrela</option>
+                <option value="Poxoréu">Poxoréu</option>
+                <option value="Primavera do Leste">Primavera do Leste</option>
+                <option value="Querência">Querência</option>
+                <option value="Reserva do Cabaçal">Reserva do Cabaçal</option>
+                <option value="Ribeirão Cascalheira">Ribeirão Cascalheira</
