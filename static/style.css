@@ -226,7 +226,7 @@ h2 {
 
 /* --- Seção de Filtros --- */
 .filter-section {
-    background-color: var(--white);
+    background-color: var(--white-bg);
     padding: 1.5rem 2rem;
     border-radius: 8px;
     box-shadow: var(--shadow);
@@ -258,7 +258,7 @@ h2 {
 
 .filter-section button {
     background-color: var(--accent-orange);
-    color: var(--white);
+    color: var(--white-bg);
     border: none;
     padding: 0.8rem 2rem;
     border-radius: 5px;
@@ -276,7 +276,7 @@ h2 {
 }
 
 .imovel-list-item {
-    background: var(--white);
+    background: var(--white-bg);
     border-radius: 8px;
     box-shadow: var(--shadow);
     overflow: hidden;
@@ -332,4 +332,138 @@ h2 {
     color: var(--accent-orange);
     margin-left: auto; /* Joga o preço para a direita */
     align-self: flex-end;
+}
+
+/* === ESTILOS PARA O FORMULÁRIO DE CADASTRO DE IMÓVEL === */
+
+/* Container do formulário com mais largura */
+.form-cadastro-container {
+    max-width: 800px;
+    background: var(--white-bg);
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin: 2rem auto;
+}
+
+.form-cadastro-container h2 {
+    text-align: left;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.form-cadastro-container label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-cadastro-container input[type="text"],
+.form-cadastro-container input[type="number"],
+.form-cadastro-container select,
+.form-cadastro-container textarea {
+    width: 100%;
+    padding: 0.85rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-sizing: border-box;
+    background-color: #F8F9FA;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-cadastro-container input:focus,
+.form-cadastro-container select:focus,
+.form-cadastro-container textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(13, 71, 161, 0.2);
+}
+
+.form-cadastro-container .input-row {
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.form-cadastro-container .input-group {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Estilização para as checkboxes de características */
+.caracteristicas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.caracteristicas-grid label {
+    background-color: #F8F9FA;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.caracteristicas-grid label:hover {
+    background-color: #e9ecef;
+}
+
+.caracteristicas-grid input[type="checkbox"] {
+    margin-right: 0.75rem;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-blue);
+}
+
+.form-cadastro-container input[type="file"] {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 2rem;
+}
+
+.form-cadastro-container .btn-publicar {
+    width: 100%;
+    background: var(--accent-orange);
+    color: var(--text-light);
+    padding: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 700;
+    transition: background-color 0.3s;
+}
+
+.form-cadastro-container .btn-publicar:hover {
+    background-color: #e66000;
+}
+
+/* === ESTILOS PARA MENSAGENS FLASH === */
+.flash {
+    padding: 1rem 1.5rem;
+    margin: 1rem 0;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-weight: 500;
+    text-align: center;
+}
+
+.flash-success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+
+.flash-error {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
 }

@@ -2,31 +2,84 @@
 {% block title %}Anunciar Imóvel - JTF Imóveis{% endblock %}
 {% block content %}
 <div class="container">
-    <form method="POST" enctype="multipart/form-data" style="max-width: 800px;">
+    <form class="form-cadastro-container" method="POST" enctype="multipart/form-data">
         <h2>Anuncie seu Imóvel</h2>
-        <label>Título do Anúncio</label>
-        <input type="text" name="titulo" placeholder="Ex: Casa espaçosa com 3 quartos" required>
-        <label>Preço (R$)</label>
-        <input type="number" name="preco" placeholder="Ex: 350000.00" step="0.01" required>
-        <label>Endereço Completo</label>
-        <input type="text" name="endereco" placeholder="Ex: Rua das Flores, 123, Bairro Jardim, São Paulo" required>
-        <div class="row">
-            <div><label>Tipo de Imóvel</label><select name="tipo" required><option value="" disabled selected>Selecione</option><option value="Casa">Casa</option><option value="Apartamento">Apartamento</option><option value="Comercial">Comercial</option><option value="Terreno">Terreno</option></select></div>
-            <div><label>Área (m²)</label><input type="number" name="area" placeholder="Ex: 120" required></div>
+        
+        <div class="input-group">
+            <label for="titulo">Título do Anúncio</label>
+            <input type="text" id="titulo" name="titulo" placeholder="Ex: Casa espaçosa com 3 quartos" required>
         </div>
-        <div class="row">
-            <div><label>Quartos</label><input type="number" name="quartos" min="0" value="0" required></div>
-            <div><label>Banheiros</label><input type="number" name="banheiros" min="0" value="0" required></div>
-            <div><label>Vagas</label><input type="number" name="vagas" min="0" value="0" required></div>
+
+        <div class="input-row">
+            <div class="input-group">
+                <label for="preco">Preço (R$)</label>
+                <input type="number" id="preco" name="preco" placeholder="Ex: 350000.00" step="0.01" required>
+            </div>
+            <div class="input-group">
+                <label for="tipo">Tipo de Imóvel</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="" disabled selected>Selecione</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Apartamento">Apartamento</option>
+                    <option value="Comercial">Comercial</option>
+                    <option value="Terreno">Terreno</option>
+                </select>
+            </div>
         </div>
-        <label>Descrição</label><textarea name="descricao" rows="5" placeholder="Descreva os detalhes do imóvel..."></textarea>
-        <label>Características</label>
-        <div><label><input type="checkbox" name="caracteristicas" value="Piscina"> Piscina</label> <label><input type="checkbox" name="caracteristicas" value="Academia"> Academia</label> <label><input type="checkbox" name="caracteristicas" value="Churrasqueira"> Churrasqueira</label> <label><input type="checkbox" name="caracteristicas" value="Portaria 24h"> Portaria 24h</label></div>
-        <br>
-        <label>Seu Contato (Telefone)</label><input type="text" name="contato" placeholder="(11) 98765-4321" required>
-        <label>Fotos do Imóvel</label><input type="file" name="fotos" accept="image/*" multiple>
-        <br><br>
-        <input type="submit" value="Publicar Anúncio" class="search-button" style="width:100%;">
+
+        <div class="input-group">
+            <label for="endereco">Endereço Completo</label>
+            <input type="text" id="endereco" name="endereco" placeholder="Ex: Rua das Flores, 123, Bairro, Cidade" required>
+        </div>
+
+        <div class="input-row">
+            <div class="input-group">
+                <label for="area">Área (m²)</label>
+                <input type="number" id="area" name="area" placeholder="Ex: 120" required>
+            </div>
+            <div class="input-group">
+                <label for="quartos">Quartos</label>
+                <input type="number" id="quartos" name="quartos" min="0" value="0" required>
+            </div>
+            <div class="input-group">
+                <label for="banheiros">Banheiros</label>
+                <input type="number" id="banheiros" name="banheiros" min="0" value="0" required>
+            </div>
+            <div class="input-group">
+                <label for="vagas">Vagas na Garagem</label>
+                <input type="number" id="vagas" name="vagas" min="0" value="0" required>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" name="descricao" rows="5" placeholder="Descreva os detalhes do imóvel..."></textarea>
+        </div>
+        
+        <div class="input-group">
+            <label>Características Adicionais</label>
+            <div class="caracteristicas-grid">
+                <label><input type="checkbox" name="caracteristicas" value="Piscina"> Piscina</label>
+                <label><input type="checkbox" name="caracteristicas" value="Academia"> Academia</label>
+                <label><input type="checkbox" name="caracteristicas" value="Churrasqueira"> Churrasqueira</label>
+                <label><input type="checkbox" name="caracteristicas" value="Portaria 24h"> Portaria 24h</label>
+                 <label><input type="checkbox" name="caracteristicas" value="Mobiliado"> Mobiliado</label>
+                <label><input type="checkbox" name="caracteristicas" value="Aceita Pet"> Aceita Pet</label>
+            </div>
+        </div>
+        
+        <div class="input-row">
+             <div class="input-group">
+                <label for="contato">Seu Contato (Telefone)</label>
+                <input type="text" id="contato" name="contato" placeholder="(11) 98765-4321" required>
+            </div>
+             <div class="input-group">
+                <label for="fotos">Fotos do Imóvel</label>
+                <input type="file" id="fotos" name="fotos" accept="image/*" multiple>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-publicar">Publicar Anúncio</button>
     </form>
 </div>
 {% endblock %}

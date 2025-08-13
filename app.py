@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from werkzeug.utils import secure_filename
 from functools import wraps
+import uuid
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -86,10 +87,12 @@ def cadastro_imovel():
         nomes_fotos = []
         for file in arquivos:
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                extensao = file.filename.rsplit('.', 1)[1].lower()
+                novo_nome = f"{uuid.uuid4().hex}.{extensao}"
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome)
                 file.save(file_path)
-                nomes_fotos.append(filename)
+                nomes_fotos.append(novo_nome)
+        
         fotos_str = ','.join(nomes_fotos)
 
         conn = get_db()
@@ -100,7 +103,10 @@ def cadastro_imovel():
         ''', (titulo, descricao, preco, endereco, tipo, area, quartos, banheiros, vagas, caracteristicas_str, contato, fotos_str, usuario_id))
         conn.commit()
         conn.close()
+        
+        flash('Seu imóvel foi enviado para análise e será publicado em breve!', 'success')
         return redirect('/')
+        
     return render_template('cadastro_imovel.html')
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -156,7 +162,6 @@ if __name__ == '__main__':
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
 
-    # Criar admin automaticamente
     conn = get_db()
     conn.execute('''
         CREATE TABLE IF NOT EXISTS usuarios (
@@ -191,7 +196,6 @@ if __name__ == '__main__':
     ''')
     conn.commit()
 
-    # Criar admin se não existir
     admin_user = conn.execute("SELECT * FROM usuarios WHERE username = 'admin'").fetchone()
     if not admin_user:
         conn.execute(
