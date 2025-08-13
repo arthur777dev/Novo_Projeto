@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Usuário - JTF Imóveis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Menu de navegação -->
+    <nav>
+        <a href="{{ url_for('index') }}">🏠 Início</a>
+        <a href="{{ url_for('login') }}">🔑 Login</a>
+    </nav>
+
+    <header style="text-align: center;">
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo JTF" style="width: 150px;">
+        <h1>JTF - Corretor de Imóveis</h1>
+    </header>
+
+    <div class="container">
+        <h2>Criar Conta</h2>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            <label>Usuário:</label>
+            <input type="text" name="username" required>
+
+            <label>Senha:</label>
+            <input type="password" name="password" required>
+
+            <label>Nome completo:</label>
+            <input type="text" name="nome">
+
+            <label>Telefone:</label>
+            <input type="text" name="telefone">
+
+            <label>Endereço:</label>
+            <input type="text" name="endereco">
+
+            <input type="submit" value="Registrar">
+        </form>
+    </div>
+
+</body>
+</html>

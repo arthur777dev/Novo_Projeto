@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Anunciar Imóvel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Menu de navegação -->
+    <nav>
+        <a href="{{ url_for('index') }}">🏠 Início</a>
+        {% if session.get('username') %}
+            <a href="{{ url_for('cadastro_imovel') }}">📌 Cadastrar Imóvel</a>
+            {% if session.get('is_admin') == 1 %}
+                <a href="{{ url_for('admin_imoveis') }}">⚙ Painel Admin</a>
+            {% endif %}
+            <span style="color:white;">👤 {{ session['username'] }}</span>
+            <a href="{{ url_for('logout') }}">🚪 Sair</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">🔑 Login</a>
+            <a href="{{ url_for('register') }}">📝 Registrar</a>
+        {% endif %}
+    </nav>
+
+    <div class="container">
+        <h2>Anunciar Seu Imóvel</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <label>Título do Anúncio</label>
+            <input type="text" name="titulo" placeholder="Ex: Apartamento moderno no centro" required>
+
+            <label>Preço</label>
+            <input type="number" name="preco" placeholder="R$" step="0.01" required>
+
+            <label>Localização</label>
+            <input type="text" name="endereco" placeholder="Bairro, Cidade - Estado" required>
+
+            <div class="row">
+                <div>
+                    <label>Tipo de Imóvel</label>
+                    <select name="tipo" required>
+                        <option value="">Selecione o tipo</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Apartamento">Apartamento</option>
+                        <option value="Comercial">Comercial</option>
+                        <option value="Terreno">Terreno</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Área (m²)</label>
+                    <input type="number" name="area" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Quartos</label>
+                    <input type="number" name="quartos" min="0" required>
+                </div>
+                <div>
+                    <label>Banheiros</label>
+                    <input type="number" name="banheiros" min="0" required>
+                </div>
+                <div>
+                    <label>Vagas</label>
+                    <input type="number" name="vagas" min="0" required>
+                </div>
+            </div>
+
+            <label>Descrição</label>
+            <textarea name="descricao" rows="4" placeholder="Descreva as características do imóvel..."></textarea>
+
+            <label>Características</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="caracteristicas" value="Piscina"> Piscina</label>
+                <label><input type="checkbox" name="caracteristicas" value="Academia"> Academia</label>
+                <label><input type="checkbox" name="caracteristicas" value="Churrasqueira"> Churrasqueira</label>
+                <label><input type="checkbox" name="caracteristicas" value="Portaria 24h"> Portaria 24h</label>
+            </div>
+
+            <label>Seu Contato</label>
+            <input type="text" name="contato" placeholder="(11) 99999-9999" required>
+
+            <label>Fotos do Imóvel</label>
+            <input type="file" name="fotos" accept="image/*" multiple>
+
+            <input type="submit" value="Publicar Anúncio">
+        </form>
+    </div>
+</body>
+</html>

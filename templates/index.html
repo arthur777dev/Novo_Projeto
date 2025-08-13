@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>JTF - Corretor de Imóveis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Menu de navegação -->
+    <nav>
+        <a href="{{ url_for('index') }}">🏠 Início</a>
+        {% if session.get('username') %}
+            <a href="{{ url_for('cadastro_imovel') }}">📌 Cadastrar Imóvel</a>
+            {% if session.get('is_admin') == 1 %}
+                <a href="{{ url_for('admin_imoveis') }}">⚙ Painel Admin</a>
+            {% endif %}
+            <span style="color:white;">👤 {{ session['username'] }}</span>
+            <a href="{{ url_for('logout') }}">🚪 Sair</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">🔑 Login</a>
+            <a href="{{ url_for('register') }}">📝 Registrar</a>
+        {% endif %}
+    </nav>
+
+    <header style="text-align: center;">
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo JTF" style="width: 150px;">
+        <h1>JTF - Corretor de Imóveis</h1>
+    </header>
+
+    <div class="container">
+        <h2>Lista de Imóveis</h2>
+
+        {% if imoveis %}
+            {% for imovel in imoveis %}
+                <div class="imovel">
+                    {% if imovel.fotos %}
+                        {% set fotos = imovel.fotos.split(',') %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ fotos[0]) }}" alt="Foto do imóvel">
+                    {% endif %}
+                    <div class="imovel-info">
+                        <strong>{{ imovel.titulo }}</strong> - R$ {{ "%.2f"|format(imovel.preco) }}<br>
+                        {{ imovel.descricao }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Nenhum imóvel cadastrado..</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

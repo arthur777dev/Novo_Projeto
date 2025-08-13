@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Site de Imóveis{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Início</a>
+        {% if session.get('username') %}
+            <a href="{{ url_for('cadastro_imovel') }}">Cadastrar Imóvel</a>
+            {% if session.get('is_admin') == 1 %}
+                <a href="{{ url_for('admin_imoveis') }}">Painel Admin</a>
+            {% endif %}
+            <span>Olá, {{ session['username'] }}</span>
+            <a href="{{ url_for('logout') }}">Sair</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Registrar</a>
+        {% endif %}
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

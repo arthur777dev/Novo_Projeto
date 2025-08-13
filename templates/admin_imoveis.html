@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <title>Painel de Aprovação - Imóveis Pendentes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Menu de navegação -->
+    <nav>
+        <a href="{{ url_for('index') }}">🏠 Início</a>
+        {% if session.get('username') %}
+            <a href="{{ url_for('cadastro_imovel') }}">📌 Cadastrar Imóvel</a>
+            {% if session.get('is_admin') == 1 %}
+                <a href="{{ url_for('admin_imoveis') }}">⚙ Painel Admin</a>
+            {% endif %}
+            <span class="user-info">👤 {{ session['username'] }}</span>
+            <a href="{{ url_for('logout') }}">🚪 Sair</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">🔑 Login</a>
+            <a href="{{ url_for('register') }}">📝 Registrar</a>
+        {% endif %}
+    </nav>
+
+    <h1>Imóveis Pendentes de Aprovação</h1>
+
+    {% if imoveis %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Preço</th>
+                <th>Endereço</th>
+                <th>Contato</th>
+                <th>Fotos</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for imovel in imoveis %}
+            <tr>
+                <td>{{ imovel.id }}</td>
+                <td>{{ imovel.titulo }}</td>
+                <td>R$ {{ "%.2f"|format(imovel.preco) }}</td>
+                <td>{{ imovel.endereco }}</td>
+                <td>{{ imovel.contato }}</td>
+                <td>
+                    {% if imovel.fotos %}
+                        {% for foto in imovel.fotos.split(',') %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" alt="Foto do imóvel">
+                        {% endfor %}
+                    {% else %}
+                        Sem fotos
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('aprovar_imovel', imovel_id=imovel.id) }}" class="btn btn-approve" aria-label="Aprovar imóvel {{ imovel.titulo }}">Aprovar</a>
+                    <a href="{{ url_for('rejeitar_imovel', imovel_id=imovel.id) }}" class="btn btn-reject" aria-label="Rejeitar imóvel {{ imovel.titulo }}">Rejeitar</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Nenhum imóvel pendente.</p>
+    {% endif %}
+
+</body>
+</html>
