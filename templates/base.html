@@ -29,7 +29,6 @@
                 </a>
             </div>
             <nav class="main-nav">
-                <a href="{{ url_for('index') }}">Início</a>
                 {% if session.get('is_admin') == 1 %}
                     <a href="{{ url_for('admin_imoveis') }}">Painel Admin</a>
                 {% endif %}

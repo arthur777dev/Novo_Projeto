@@ -64,62 +64,6 @@ body {
     padding: 0.5rem 1rem;
 }
 
-/* === BANNER DE BUSCA (ELEMENTO PRINCIPAL) === */
-.search-banner {
-    background: #e9ecef;
-    padding: 2.5rem 2rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.search-box {
-    background: var(--white-bg);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    align-items: flex-end;
-}
-
-.search-box h3 {
-    grid-column: 1 / -1; /* Ocupa a linha toda */
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
-    color: var(--primary-blue);
-}
-
-.search-field label {
-    font-weight: 500;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.search-field select,
-.search-field input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    box-sizing: border-box;
-}
-
-.search-button {
-    background-color: var(--accent-orange);
-    color: var(--text-light);
-    padding: 0.75rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 700;
-    width: 100%;
-    transition: background-color 0.3s;
-}
-.search-button:hover {
-    background-color: #e66000;
-}
-
 /* === CONTAINER E CONTEÚDO PRINCIPAL === */
 .container {
     max-width: 1200px;
@@ -132,43 +76,6 @@ h2 {
     margin-bottom: 2rem;
     color: var(--primary-blue);
     font-weight: 700;
-}
-
-/* === CARDS DE IMÓVEIS === */
-.imoveis-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-.imovel-card {
-    background: var(--white-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-.imovel-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-}
-
-.imovel-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.imovel-info {
-    padding: 1.5rem;
-}
-
-.imovel-info strong {
-    display: block;
-    font-size: 1.2rem;
-    color: var(--primary-blue);
-    margin-bottom: 0.5rem;
 }
 
 /* === FORMULÁRIOS (Login, Cadastro, etc) === */
@@ -222,53 +129,7 @@ h2 {
     margin-bottom: 1.5rem;
 }
 
-/* === ADIÇÕES PARA A PÁGINA DE LISTAGEM DE IMÓVEIS === */
-
-/* --- Seção de Filtros --- */
-.filter-section {
-    background-color: var(--white-bg);
-    padding: 1.5rem 2rem;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    margin-bottom: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    align-items: center;
-}
-
-.filter-group {
-    flex: 1 1 180px; /* Permite que os grupos quebrem a linha em telas menores */
-}
-
-.filter-group label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.filter-group select,
-.filter-group input {
-    width: 100%;
-    padding: 0.7rem;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-}
-
-.filter-section button {
-    background-color: var(--accent-orange);
-    color: var(--white-bg);
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 700;
-    align-self: flex-end; /* Alinha o botão com a base dos inputs */
-}
-
-/* --- Layout da Lista de Imóveis --- */
+/* === LISTAGEM DE IMÓVEIS (INDEX) === */
 .imoveis-list-container {
     display: flex;
     flex-direction: column;
@@ -289,7 +150,7 @@ h2 {
 }
 
 .imovel-list-image {
-    flex-shrink: 0; /* Impede que a imagem encolha */
+    flex-shrink: 0;
     width: 300px;
 }
 
@@ -330,13 +191,11 @@ h2 {
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--accent-orange);
-    margin-left: auto; /* Joga o preço para a direita */
+    margin-left: auto;
     align-self: flex-end;
 }
 
-/* === ESTILOS PARA O FORMULÁRIO DE CADASTRO DE IMÓVEL === */
-
-/* Container do formulário com mais largura */
+/* === FORMULÁRIO DE CADASTRO DE IMÓVEL === */
 .form-cadastro-container {
     max-width: 800px;
     background: var(--white-bg);
@@ -392,7 +251,6 @@ h2 {
     min-width: 0;
 }
 
-/* Estilização para as checkboxes de características */
 .caracteristicas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -446,7 +304,7 @@ h2 {
     background-color: #e66000;
 }
 
-/* === ESTILOS PARA MENSAGENS FLASH === */
+/* === MENSAGENS FLASH === */
 .flash {
     padding: 1rem 1.5rem;
     margin: 1rem 0;
@@ -466,4 +324,157 @@ h2 {
     color: #842029;
     background-color: #f8d7da;
     border-color: #f5c2c7;
+}
+
+/* === NOVO BANNER DE BUSCA (PÁGINA INICIAL) === */
+.search-banner {
+    position: relative;
+    height: 70vh;
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-light);
+    text-align: center;
+    padding: 2rem;
+    background-image: url('https://images.unsplash.com/photo-1558913978-dd6ca81c1c72?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.search-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    z-index: 1;
+}
+
+.search-banner-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: space-between;
+}
+
+.hero-text {
+    flex: 1;
+    text-align: left;
+    max-width: 600px;
+}
+
+.hero-text h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    margin: 0;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+.search-box {
+    background: var(--white-bg);
+    color: var(--text-dark);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px;
+    text-align: left;
+    margin-left: auto;
+}
+
+.search-box h3 {
+    font-size: 1.5rem;
+    color: var(--primary-blue);
+    margin: 0 0 1.5rem 0;
+}
+
+.search-field {
+    margin-bottom: 1rem;
+}
+
+.search-box select,
+.search-box input {
+    width: 100%;
+    padding: 0.85rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.btn-buscar {
+    width: 100%;
+    background-color: #38a596;
+    color: var(--text-light);
+    border: none;
+    padding: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-buscar:hover {
+    background-color: #2e8a7b;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--primary-blue);
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+/* === AJUSTES RESPONSIVOS === */
+@media (max-width: 992px) {
+    .search-banner-content {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+    .hero-text {
+        text-align: center;
+        max-width: none;
+    }
+    .hero-text h1 {
+        font-size: 2.2rem;
+    }
+    .search-box {
+        margin-left: 0;
+        max-width: 80%;
+    }
+    .imovel-list-item {
+        flex-direction: column;
+    }
+    .imovel-list-image {
+        width: 100%;
+        height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-nav {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .main-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
 }

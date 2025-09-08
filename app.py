@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -25,20 +25,44 @@ def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
-            return redirect('/login')
+            return redirect(url_for('login'))
         conn = get_db()
         user = conn.execute("SELECT * FROM usuarios WHERE id = ?", (session['user_id'],)).fetchone()
         conn.close()
         if not user or user['is_admin'] != 1:
-            return "Acesso negado! Apenas administradores podem acessar esta página.", 403
+            flash("Acesso negado! Apenas administradores podem acessar esta página.", "error")
+            return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
 
 @app.route('/')
 def index():
+    # Pega os valores do formulário que vêm pela URL (GET)
+    tipo = request.args.get('tipo', '')
+    cidade = request.args.get('cidade', '')
+    bairro = request.args.get('bairro', '')
+
     conn = get_db()
-    imoveis = conn.execute("SELECT * FROM imoveis WHERE status = 'aprovado'").fetchall()
+    
+    # Começa a montar a consulta SQL
+    query = "SELECT * FROM imoveis WHERE status = 'aprovado'"
+    params = []
+
+    # Adiciona filtros à consulta dinamicamente
+    if tipo:
+        query += " AND tipo = ?"
+        params.append(tipo)
+    if cidade:
+        query += " AND endereco LIKE ?"
+        params.append(f'%{cidade}%')
+    if bairro:
+        query += " AND endereco LIKE ?"
+        params.append(f'%{bairro}%')
+
+    # Executa a consulta com os parâmetros seguros
+    imoveis = conn.execute(query, params).fetchall()
     conn.close()
+    
     return render_template('index.html', imoveis=imoveis)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -53,20 +77,22 @@ def login():
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['is_admin'] = user['is_admin']
-            return redirect('/')
+            return redirect(url_for('index'))
         else:
-            return render_template('login.html', error='Usuário ou senha inválidos!')
+            flash('Usuário ou senha inválidos!', 'error')
+            return redirect(url_for('login'))
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect('/')
+    return redirect(url_for('index'))
 
 @app.route('/cadastro_imovel', methods=['GET', 'POST'])
 def cadastro_imovel():
     if 'user_id' not in session:
-        return redirect('/login')
+        flash("Você precisa estar logado para anunciar um imóvel.", "error")
+        return redirect(url_for('login'))
     if request.method == 'POST':
         titulo = request.form['titulo']
         descricao = request.form['descricao']
@@ -105,7 +131,7 @@ def cadastro_imovel():
         conn.close()
         
         flash('Seu imóvel foi enviado para análise e será publicado em breve!', 'success')
-        return redirect('/')
+        return redirect(url_for('index'))
         
     return render_template('cadastro_imovel.html')
 
@@ -127,9 +153,11 @@ def register():
             ''', (username, hashed_password, nome, telefone, endereco))
             conn.commit()
             conn.close()
-            return redirect('/login')
+            flash('Conta criada com sucesso! Faça o login.', 'success')
+            return redirect(url_for('login'))
         except sqlite3.IntegrityError:
-            return render_template('register.html', error='Usuário já existe!')
+            flash('Este nome de usuário já existe. Tente outro.', 'error')
+            return redirect(url_for('register'))
     return render_template('register.html')
 
 @app.route('/admin/imoveis')
@@ -147,7 +175,7 @@ def aprovar_imovel(imovel_id):
     conn.execute("UPDATE imoveis SET status = 'aprovado' WHERE id = ?", (imovel_id,))
     conn.commit()
     conn.close()
-    return redirect('/admin/imoveis')
+    return redirect(url_for('admin_imoveis'))
 
 @app.route('/admin/rejeitar/<int:imovel_id>')
 @admin_required
@@ -156,51 +184,21 @@ def rejeitar_imovel(imovel_id):
     conn.execute("UPDATE imoveis SET status = 'rejeitado' WHERE id = ?", (imovel_id,))
     conn.commit()
     conn.close()
-    return redirect('/admin/imoveis')
+    return redirect(url_for('admin_imoveis'))
 
 if __name__ == '__main__':
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
 
-    conn = get_db()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            nome TEXT,
-            telefone TEXT,
-            endereco TEXT,
-            is_admin INTEGER DEFAULT 0
-        )
-    ''')
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS imoveis (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titulo TEXT NOT NULL,
-            descricao TEXT,
-            preco REAL NOT NULL,
-            endereco TEXT,
-            tipo TEXT,
-            area REAL,
-            quartos INTEGER,
-            banheiros INTEGER,
-            vagas INTEGER,
-            caracteristicas TEXT,
-            contato TEXT,
-            fotos TEXT,
-            status TEXT DEFAULT 'pendente',
-            usuario_id INTEGER,
-            FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
-        )
-    ''')
-    conn.commit()
+    from atualiza_db import update_db_schema
+    update_db_schema()
 
+    conn = get_db()
     admin_user = conn.execute("SELECT * FROM usuarios WHERE username = 'admin'").fetchone()
     if not admin_user:
         conn.execute(
-            "INSERT INTO usuarios (username, password, nome, telefone, endereco, is_admin) VALUES (?, ?, ?, ?, ?, ?)",
-            ('admin', generate_password_hash('123456'), 'Administrador', '', '', 1)
+            "INSERT INTO usuarios (username, password, nome, is_admin) VALUES (?, ?, ?, ?)",
+            ('admin', generate_password_hash('123456'), 'Administrador', 1)
         )
         conn.commit()
         print("✅ Admin criado com sucesso!")
