@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Contato - JTF Imóveis{% endblock %}
+{% block content %}
+<div class="container">
+    <div style="max-width: 800px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: var(--shadow);">
+        <h2>Entre em Contato</h2>
+        <p>Estamos prontos para atendê-lo. Fale conosco através dos nossos canais:</p>
+        
+        <div style="font-size: 1.1rem; line-height: 1.8; margin-top: 2rem;">
+            <p><strong>&#128222; Telefone:</strong> (11) 9999-9999</p>
+            <p><strong>&#128231; E-mail:</strong> contato@jtfimoveis.com.br</p>
+            <p><strong>&#128205; Endereço:</strong> Av. Exemplo, 123, Centro, Cuiabá - MT</p>
+        </div>
+
+        <a href="https://api.whatsapp.com/send?phone=5511999999999" target="_blank" class="btn-whatsapp" style="display: inline-block; text-align: center; margin-top: 2rem; text-decoration: none;">
+            &#128173; Chamar no WhatsApp
+        </a>
+    </div>
+</div>
+
+{% endblock %}

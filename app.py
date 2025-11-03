@@ -38,9 +38,12 @@ def admin_required(f):
 @app.route('/')
 def index():
     # Pega os valores do formulário que vêm pela URL (GET)
+    operacao = request.args.get('operacao', '')
     tipo = request.args.get('tipo', '')
     cidade = request.args.get('cidade', '')
     bairro = request.args.get('bairro', '')
+    valor_min = request.args.get('faixa_valor', '')
+    valor_max = request.args.get('faixa_valor_max', '')
 
     conn = get_db()
     
@@ -48,7 +51,13 @@ def index():
     query = "SELECT * FROM imoveis WHERE status = 'aprovado'"
     params = []
 
+    # Verifica se algum filtro foi aplicado
+    search_active = bool(operacao or tipo or cidade or bairro or valor_min or valor_max)
+
     # Adiciona filtros à consulta dinamicamente
+    if operacao:
+        query += " AND operacao = ?"
+        params.append(operacao)
     if tipo:
         query += " AND tipo = ?"
         params.append(tipo)
@@ -58,12 +67,72 @@ def index():
     if bairro:
         query += " AND endereco LIKE ?"
         params.append(f'%{bairro}%')
+    
+    # Filtro de Preço Mínimo
+    if valor_min:
+        try:
+            preco_min_float = float(valor_min)
+            query += " AND preco >= ?"
+            params.append(preco_min_float)
+        except ValueError:
+            pass # Ignora se o valor não for um número
+
+    # Filtro de Preço Máximo
+    if valor_max:
+        try:
+            preco_max_float = float(valor_max)
+            query += " AND preco <= ?"
+            params.append(preco_max_float)
+        except ValueError:
+            pass # Ignora se o valor não for um número
 
     # Executa a consulta com os parâmetros seguros
     imoveis = conn.execute(query, params).fetchall()
     conn.close()
     
-    return render_template('index.html', imoveis=imoveis)
+    if search_active:
+        # Se uma busca foi feita, mostra apenas os resultados
+        return render_template('index.html', 
+                               imoveis_resultado=imoveis, 
+                               search_active=True)
+    else:
+        # Se a página foi carregada normally (sem busca), mostra os destaques
+        imoveis_compra = [i for i in imoveis if i['operacao'] == 'compra']
+        imoveis_aluguel = [i for i in imoveis if i['operacao'] == 'aluguel']
+        return render_template('index.html', 
+                               imoveis_compra=imoveis_compra, 
+                               imoveis_aluguel=imoveis_aluguel,
+                               search_active=False)
+
+# ROTA: Página de Detalhes do Imóvel
+@app.route('/imovel/<int:imovel_id>')
+def imovel_detalhe(imovel_id):
+    conn = get_db()
+    # Busca apenas imóveis aprovados para visualização pública
+    imovel = conn.execute("SELECT * FROM imoveis WHERE id = ? AND status = 'aprovado'", (imovel_id,)).fetchone()
+    conn.close()
+    
+    if imovel is None:
+        flash("Imóvel não encontrado ou ainda não aprovado para visualização.", "error")
+        return redirect(url_for('index'))
+
+    # Prepara a lista de fotos e características
+    fotos_list = imovel['fotos'].split(',') if imovel['fotos'] else []
+    caracteristicas_list = imovel['caracteristicas'].split(',') if imovel['caracteristicas'] else []
+        
+    return render_template('imovel_detalhe.html', imovel=imovel, fotos_list=fotos_list, caracteristicas_list=caracteristicas_list)
+
+# === NOVAS ROTAS ADICIONADAS ===
+
+@app.route('/sobre')
+def sobre():
+    return render_template('sobre.html')
+
+@app.route('/contato')
+def contato():
+    return render_template('contato.html')
+
+# =================================
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -94,6 +163,9 @@ def cadastro_imovel():
         flash("Você precisa estar logado para anunciar um imóvel.", "error")
         return redirect(url_for('login'))
     if request.method == 'POST':
+        # CAMPO: OPERAÇÃO
+        operacao = request.form['operacao']
+        
         titulo = request.form['titulo']
         descricao = request.form['descricao']
         preco = request.form['preco']
@@ -124,9 +196,9 @@ def cadastro_imovel():
         conn = get_db()
         conn.execute('''
             INSERT INTO imoveis 
-            (titulo, descricao, preco, endereco, tipo, area, quartos, banheiros, vagas, caracteristicas, contato, fotos, status, usuario_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?)
-        ''', (titulo, descricao, preco, endereco, tipo, area, quartos, banheiros, vagas, caracteristicas_str, contato, fotos_str, usuario_id))
+            (titulo, descricao, preco, endereco, tipo, area, quartos, banheiros, vagas, caracteristicas, contato, fotos, status, usuario_id, operacao)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?, ?)
+        ''', (titulo, descricao, preco, endereco, tipo, area, quartos, banheiros, vagas, caracteristicas_str, contato, fotos_str, usuario_id, operacao))
         conn.commit()
         conn.close()
         
@@ -206,4 +278,4 @@ if __name__ == '__main__':
         print("ℹ️ Admin já existe.")
     conn.close()
 
-    app.run(debug=True) 
+    app.run(debug=True)

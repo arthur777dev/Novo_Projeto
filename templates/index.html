@@ -7,77 +7,151 @@
 <div class="search-banner">
     <div class="search-banner-overlay"></div>
     <div class="search-banner-content">
-        <div class="hero-text">
-            <h1>COMPRE COM QUEM CONHECE DE IMÓVEL !!!!!</h1>
-            <p>IMÓVEIS EM CUIABÁ E REGIÃO</p>
-        </div>
-        <form class="search-box">
+        <form class="search-box" method="GET" action="{{ url_for('index') }}">
             <h3>Encontre seu imóvel</h3>
-            <div class="search-field">
-                <select id="operacao" name="operacao">
-                    <option value="comprar">Comprar</option>
-                    <option value="alugar">Alugar</option>
-                </select>
-            </div>
-            <div class="search-field">
-                <select id="tipo" name="tipo">
-                    <option value="">Tipo</option>
-                    <option value="Casa">Casa</option>
-                    <option value="Apartamento">Apartamento</option>
-                    <option value="Comercial">Comercial</option>
-                </select>
-            </div>
-            <div class="search-field">
-                <select id="cidade" name="cidade">
-                    <option value="">Cidade</option>
-                    <option value="Cuiabá">Cuiabá</option>
-                    <option value="Várzea Grande">Várzea Grande</option>
+            <div class="search-fields-grid">
+                <div class="search-field">
+                    <select id="operacao" name="operacao">
+                        <option value="">Qual o seu objetivo?</option>
+                        <option value="compra">Comprar</option>
+                        <option value="aluguel">Alugar</option>
                     </select>
+                </div>
+                <div class="search-field">
+                    <select id="tipo" name="tipo">
+                        <option value="">Tipo de imóvel</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Apartamento">Apartamento</option>
+                        <option value="Comercial">Comercial</option>
+                    </select>
+                </div>
+                <div class="search-field">
+                    <select id="cidade" name="cidade">
+                        <option value="">Cidade</option>
+                        <option value="Cuiabá">Cuiabá</option>
+                        <option value="Várzea Grande">Várzea Grande</option>
+                    </select>
+                </div>
+                <div class="search-field">
+                    <input type="text" id="bairro" name="bairro" placeholder="Bairro">
+                </div>
+                <div class="search-field">
+                    <input type="text" id="faixa_valor" name="faixa_valor" placeholder="Valor Mín.">
+                </div>
+                <div class="search-field">
+                    <input type="text" id="faixa_valor_max" name="faixa_valor_max" placeholder="Valor Máx.">
+                </div>
             </div>
-            <div class="search-field">
-                <input type="text" id="bairro" name="bairro" placeholder="Bairro">
-            </div>
-            <div class="search-field">
-                <input type="text" id="faixa_valor" name="faixa_valor" placeholder="Faixa de Valor">
-            </div>
-             <div class="search-field">
-                <input type="text" id="referencia" name="referencia" placeholder="Busca por Referência">
-            </div>
-            <button type="submit" class="btn-buscar">BUSCAR</button>
+            <button type="submit" class="btn-buscar">BUSCAR IMÓVEL</button>
         </form>
     </div>
 </div>
 
 
 <div class="container">
-    <div class="imoveis-list-container">
-        {% if imoveis %}
-            {% for imovel in imoveis %}
-                <article class="imovel-list-item">
-                    <div class="imovel-list-image">
-                        {% if imovel.fotos %}
-                            {% set foto = imovel.fotos.split(',')[0] %}
-                            <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" alt="Foto de {{ imovel.titulo }}">
-                        {% else %}
-                            <img src="https://via.placeholder.com/300x250.png?text=Sem+Foto" alt="Sem foto">
-                        {% endif %}
-                    </div>
-                    <div class="imovel-list-content">
-                        <div>
-                            <h3>{{ imovel.titulo }}</h3>
-                            <p class="location">{{ imovel.endereco }}</p>
+    
+    {% if search_active %}
+        <h2 class="section-title">Resultados da Busca</h2>
+        <div class="imoveis-list-container">
+            {% if imoveis_resultado %}
+                {% for imovel in imoveis_resultado %}
+                    <article class="imovel-card-item">
+                        <div class="imovel-card-image">
+                            {% if imovel.fotos %}
+                                {% set foto = imovel.fotos.split(',')[0] %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" alt="Foto de {{ imovel.titulo }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/400x300.png?text=Sem+Foto" alt="Sem foto">
+                            {% endif %}
                         </div>
-                        <div class="imovel-list-details">
-                            <span>&#128719; {{ imovel.quartos }} quartos</span>
-                            <span>&#128705; {{ imovel.banheiros }} banheiros</span>
-                            <span>&#128207; {{ imovel.area }} m²</span>
+                        <div class="imovel-card-content">
+                            <h3 class="imovel-title">{{ imovel.titulo }}</h3>
+                            <p class="imovel-location">{{ imovel.endereco }}</p>
+                            <div class="imovel-card-details">
+                                <span><i class="icon-bed"></i> {{ imovel.quartos }} Qts</span>
+                                <span><i class="icon-bath"></i> {{ imovel.banheiros }} Banh</span>
+                                <span><i class="icon-area"></i> {{ imovel.area }} m²</span>
+                            </div>
+                            <div class="imovel-card-footer">
+                                <p class="imovel-price">R$ {{ "%.2f"|format(imovel.preco) }}</p>
+                                <a href="{{ url_for('imovel_detalhe', imovel_id=imovel.id) }}" class="btn-detalhes">Ver Detalhes</a>
+                            </div>
                         </div>
-                        <p class="price">R$ {{ "%.2f"|format(imovel.preco) }}</p>
-                    </div>
-                </article>
-            {% endfor %}
-        {% else %}
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p class="no-results-message" style="text-align: center; width: 100%;">Nenhum imóvel encontrado com os critérios da sua busca.</p>
             {% endif %}
-    </div>
+        </div>
+
+    {% else %}
+        <h2 class="section-title">Imóveis para Compra</h2>
+        <div class="imoveis-list-container">
+            {% if imoveis_compra %}
+                {% for imovel in imoveis_compra %}
+                    <article class="imovel-card-item">
+                        <div class="imovel-card-image">
+                            {% if imovel.fotos %}
+                                {% set foto = imovel.fotos.split(',')[0] %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" alt="Foto de {{ imovel.titulo }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/400x300.png?text=Sem+Foto" alt="Sem foto">
+                            {% endif %}
+                        </div>
+                        <div class="imovel-card-content">
+                            <h3 class="imovel-title">{{ imovel.titulo }}</h3>
+                            <p class="imovel-location">{{ imovel.endereco }}</p>
+                            <div class="imovel-card-details">
+                                <span><i class="icon-bed"></i> {{ imovel.quartos }} Qts</span>
+                                <span><i class="icon-bath"></i> {{ imovel.banheiros }} Banh</span>
+                                <span><i class="icon-area"></i> {{ imovel.area }} m²</span>
+                            </div>
+                            <div class="imovel-card-footer">
+                                <p class="imovel-price">R$ {{ "%.2f"|format(imovel.preco) }}</p>
+                                <a href="{{ url_for('imovel_detalhe', imovel_id=imovel.id) }}" class="btn-detalhes">Ver Detalhes</a>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p class="no-results-message" style="text-align: center; width: 100%;">Nenhum imóvel para compra em destaque no momento.</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 4rem;"></div>
+
+        <h2 class="section-title">Imóveis para Aluguel</h2>
+        <div class="imoveis-list-container">
+            {% if imoveis_aluguel %}
+                {% for imovel in imoveis_aluguel %}
+                    <article class="imovel-card-item">
+                        <div class="imovel-card-image">
+                            {% if imovel.fotos %}
+                                {% set foto = imovel.fotos.split(',')[0] %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" alt="Foto de {{ imovel.titulo }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/400x300.png?text=Sem+Foto" alt="Sem foto">
+                            {% endif %}
+                        </div>
+                        <div class="imovel-card-content">
+                            <h3 class="imovel-title">{{ imovel.titulo }}</h3>
+                            <p class="imovel-location">{{ imovel.endereco }}</p>
+                            <div class="imovel-card-details">
+                                <span><i class="icon-bed"></i> {{ imovel.quartos }} Qts</span>
+                                <span><i class="icon-bath"></i> {{ imovel.banheiros }} Banh</span>
+                                <span><i class="icon-area"></i> {{ imovel.area }} m²</span>
+                            </div>
+                            <div class="imovel-card-footer">
+                                <p class="imovel-price">R$ {{ "%.2f"|format(imovel.preco) }}</p>
+                                <a href="{{ url_for('imovel_detalhe', imovel_id=imovel.id) }}" class="btn-detalhes">Ver Detalhes</a>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p class="no-results-message" style="text-align: center; width: 100%;">Nenhum imóvel para aluguel em destaque no momento.</p>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

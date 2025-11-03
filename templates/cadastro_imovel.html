@@ -5,15 +5,24 @@
     <form class="form-cadastro-container" method="POST" enctype="multipart/form-data">
         <h2>Anuncie seu Imóvel</h2>
         
-        <div class="input-group">
-            <label for="titulo">Título do Anúncio</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Ex: Casa espaçosa com 3 quartos" required>
+        <div class="input-row">
+            <div class="input-group">
+                <label for="operacao">Para qual finalidade?</label>
+                <select id="operacao" name="operacao" required>
+                    <option value="compra" selected>Venda (Compra)</option>
+                    <option value="aluguel">Aluguel</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="titulo">Título do Anúncio</label>
+                <input type="text" id="titulo" name="titulo" placeholder="Ex: Casa espaçosa com 3 quartos" required>
+            </div>
         </div>
 
         <div class="input-row">
             <div class="input-group">
                 <label for="preco">Preço (R$)</label>
-                <input type="number" id="preco" name="preco" placeholder="Ex: 350000.00" step="0.01" required>
+                <input type="number" id="preco" name="preco" placeholder="Ex: 350000.00 (Venda) ou 1500.00 (Aluguel)" step="0.01" required>
             </div>
             <div class="input-group">
                 <label for="tipo">Tipo de Imóvel</label>
@@ -26,7 +35,7 @@
                 </select>
             </div>
         </div>
-
+        
         <div class="input-group">
             <label for="endereco">Endereço Completo</label>
             <input type="text" id="endereco" name="endereco" placeholder="Ex: Rua das Flores, 123, Bairro, Cidade" required>

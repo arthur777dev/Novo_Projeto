@@ -29,10 +29,15 @@
                 </a>
             </div>
             <nav class="main-nav">
+                <a href="{{ url_for('index') }}">Início</a>
+                <a href="{{ url_for('sobre') }}">Sobre Nós</a>
+                <a href="{{ url_for('contato') }}">Contato</a>
+                
+                <a href="{{ url_for('cadastro_imovel') }}">Anunciar Imóvel</a>
+                
                 {% if session.get('is_admin') == 1 %}
                     <a href="{{ url_for('admin_imoveis') }}">Painel Admin</a>
                 {% endif %}
-                <a href="{{ url_for('cadastro_imovel') }}">Anunciar Imóvel</a>
             </nav>
         </div>
     </header>
@@ -53,5 +58,10 @@
         {% block content %}{% endblock %}
     </main>
 
+    <footer>
+        <div class="footer-copyright">
+            <p>&copy; 2024 JTF Imóveis - Todos os direitos reservados.</p>
+        </div>
+    </footer>
 </body>
 </html>

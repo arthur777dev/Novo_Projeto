@@ -28,15 +28,15 @@
                 <td>
                     {% if imovel.fotos %}
                         {% for foto in imovel.fotos.split(',') %}
-                            <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" alt="Foto do imóvel">
+                            <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" alt="Foto do imóvel" style="width: 100px; height: auto; margin: 5px; border-radius: 4px;">
                         {% endfor %}
                     {% else %}
                         <span>Sem fotos</span>
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ url_for('aprovar_imovel', imovel_id=imovel.id) }}" class="btn btn-approve">Aprovar</a>
-                    <a href="{{ url_for('rejeitar_imovel', imovel_id=imovel.id) }}" class="btn btn-reject">Rejeitar</a>
+                    <a href="{{ url_for('aprovar_imovel', imovel_id=imovel.id) }}" class="btn btn-approve" style="margin-bottom: 5px; display: inline-block;">Aprovar</a>
+                    <a href="{{ url_for('rejeitar_imovel', imovel_id=imovel.id) }}" class="btn btn-reject" style="display: inline-block;">Rejeitar</a>
                 </td>
             </tr>
         {% endfor %}
@@ -45,5 +45,33 @@
     {% else %}
         <p style="text-align: center;">Nenhum imóvel pendente para aprovação.</p>
     {% endif %}
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background-color: var(--white-bg);
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background-color: var(--light-gray-bg);
+            font-weight: 700;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        td:last-child {
+            min-width: 120px;
+        }
+    </style>
 </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 /* === GLOBAIS E VARIÁVEIS DE COR (Inspirado em UsadoFácil) === */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
 
 :root {
     --primary-blue: #0D47A1; /* Azul escuro principal */
@@ -9,7 +9,7 @@
     --text-dark: #333333;
     --text-light: #FFFFFF;
     --border-color: #E0E0E0;
-    --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow: 0 4px 12px rgba(0,0,0,0.08); /* Sombra mais suave */
 }
 
 body {
@@ -20,54 +20,80 @@ body {
     line-height: 1.6;
 }
 
-/* === NAVEGAÇÃO SUPERIOR === */
+/* Garante que o conteúdo fique abaixo do header em sites mais avançados, para o footer ficar no final. */
+body > main {
+    min-height: calc(100vh - 200px); /* Ajuste este valor se o header/footer tiverem altura diferente */
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-blue);
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* === NAVEGAÇÃO SUPERIOR (AUMENTADA) === */
 .top-nav {
-    background-color: var(--primary-blue);
+    background-color: #002D62; /* Azul Marinho para o topo */
     color: var(--text-light);
-    padding: 0.5rem 2rem;
+    padding: 0.8rem 2rem; /* Aumentado de 0.5rem */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 1.1rem; /* Aumentado de 1rem */
 }
 
 .top-nav a {
     color: var(--text-light);
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    font-weight: 400;
 }
 .top-nav a:hover {
-    background-color: rgba(255,255,255,0.1);
+    background-color: transparent;
+    text-decoration: underline;
 }
 
-/* === HEADER COM LOGO E MENU PRINCIPAL === */
+/* === HEADER COM LOGO E MENU PRINCIPAL (AUMENTADO) === */
 .main-header {
     background-color: var(--white-bg);
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem; /* Aumentado de 1rem */
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .main-header .logo img {
-    max-width: 180px;
+    max-width: 240px; /* Aumentado de 190px */
     height: auto;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
 }
 
 .main-nav a {
     color: var(--primary-blue);
     text-decoration: none;
-    font-weight: 700;
-    padding: 0.5rem 1rem;
+    font-weight: 700; /* Mais forte */
+    font-size: 1.25rem; /* Aumentado de 1.1rem */
+    padding: 1.2rem 1.5rem; /* Aumentado */
+    margin: 0 0.5rem; 
+    transition: color 0.3s, border-bottom 0.3s;
+    border-bottom: 3px solid transparent;
 }
+.main-nav a:hover {
+    color: var(--accent-orange);
+    border-bottom: 3px solid var(--accent-orange);
+}
+
 
 /* === CONTAINER E CONTEÚDO PRINCIPAL === */
 .container {
     max-width: 1200px;
-    margin: 2rem auto;
+    margin: 3rem auto;
     padding: 0 2rem;
 }
 
@@ -78,7 +104,7 @@ h2 {
     font-weight: 700;
 }
 
-/* === FORMULÁRIOS (Login, Cadastro, etc) === */
+/* === FORMULÁRIOS GENÉRICOS (Login, Cadastro) === */
 .form-container {
     max-width: 500px;
     background: var(--white-bg);
@@ -98,15 +124,16 @@ h2 {
     box-sizing: border-box;
 }
 
+/* BOTÃO AUMENTADO: Login/Registro */
 .form-container input[type="submit"] {
     width: 100%;
     background: var(--primary-blue);
     color: var(--text-light);
-    padding: 0.8rem;
+    padding: 1rem; /* Aumentado de 0.8rem */
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.2rem; /* Aumentado de 1.1rem */
     font-weight: 600;
 }
 
@@ -128,74 +155,7 @@ h2 {
     text-align: center;
     margin-bottom: 1.5rem;
 }
-
-/* === LISTAGEM DE IMÓVEIS (INDEX) === */
-.imoveis-list-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.imovel-list-item {
-    background: var(--white-bg);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    display: flex;
-    transition: box-shadow 0.3s;
-}
-
-.imovel-list-item:hover {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.imovel-list-image {
-    flex-shrink: 0;
-    width: 300px;
-}
-
-.imovel-list-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.imovel-list-content {
-    padding: 1.5rem 2rem;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.imovel-list-content h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-blue);
-    margin: 0 0 0.5rem 0;
-}
-
-.imovel-list-content .location {
-    color: #555;
-    margin-bottom: 1rem;
-}
-
-.imovel-list-details {
-    display: flex;
-    gap: 1.5rem;
-    margin: auto 0 1rem 0;
-    color: #555;
-    font-weight: 500;
-}
-
-.imovel-list-content .price {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--accent-orange);
-    margin-left: auto;
-    align-self: flex-end;
-}
-
-/* === FORMULÁRIO DE CADASTRO DE IMÓVEL === */
+/* Estilos para o formulário de Cadastro de Imóvel mantidos do código anterior */
 .form-cadastro-container {
     max-width: 800px;
     background: var(--white-bg);
@@ -287,15 +247,16 @@ h2 {
     margin-bottom: 2rem;
 }
 
+/* BOTÃO AUMENTADO: Publicar Anúncio */
 .form-cadastro-container .btn-publicar {
     width: 100%;
     background: var(--accent-orange);
     color: var(--text-light);
-    padding: 0.9rem;
+    padding: 1.1rem; /* Aumentado de 0.9rem */
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1.3rem; /* Aumentado de 1.2rem */
     font-weight: 700;
     transition: background-color 0.3s;
 }
@@ -329,15 +290,15 @@ h2 {
 /* === NOVO BANNER DE BUSCA (PÁGINA INICIAL) === */
 .search-banner {
     position: relative;
-    height: 70vh;
-    min-height: 500px;
+    height: 75vh; 
+    min-height: 500px; 
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--text-light);
     text-align: center;
     padding: 2rem;
-    background-image: url('https://images.unsplash.com/photo-1558913978-dd6ca81c1c72?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-image: url('https://images.unsplash.com/photo-1558913978-dd6ca81c1c72?q=80&w=1974&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%D');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -349,132 +310,364 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.65);
+    background-color: rgba(0, 0, 0, 0.4); /* Overlay mais claro */
     z-index: 1;
 }
 
 .search-banner-content {
     position: relative;
     z-index: 2;
-    display: flex;
-    gap: 3rem;
+    display: block;
+    justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px; 
     margin: 0 auto;
-    justify-content: space-between;
-}
-
-.hero-text {
-    flex: 1;
-    text-align: left;
-    max-width: 600px;
-}
-
-.hero-text h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-    margin: 0;
-}
-
-.hero-text p {
-    font-size: 1.2rem;
-    margin-top: 0.5rem;
 }
 
 .search-box {
-    background: var(--white-bg);
+    background: rgba(255, 255, 255, 0.95); /* Fundo branco com leve transparência */
     color: var(--text-dark);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
+    padding: 3rem; 
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 400px;
+    max-width: 1100px; 
     text-align: left;
-    margin-left: auto;
+    margin: 0 auto; /* Centraliza a caixa de busca */
+    box-sizing: border-box; /* Garante que o padding não estoure o max-width */
 }
 
 .search-box h3 {
-    font-size: 1.5rem;
+    text-align: center;
+    font-size: 2.2rem; 
     color: var(--primary-blue);
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 2.5rem 0; 
+    font-weight: 700;
 }
 
-.search-field {
-    margin-bottom: 1rem;
+.search-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+    gap: 1.5rem; 
+    margin-bottom: 2rem; 
 }
 
 .search-box select,
 .search-box input {
     width: 100%;
-    padding: 0.85rem;
-    border: 1px solid var(--border-color);
+    padding: 1rem; 
+    border: 1px solid #CCCCCC;
     border-radius: 6px;
     box-sizing: border-box;
+    background-color: var(--white-bg);
+    font-size: 1.1rem; 
 }
 
+/* BOTÃO AUMENTADO: Buscar */
 .btn-buscar {
     width: 100%;
-    background-color: #38a596;
+    background-color: var(--accent-orange);
     color: var(--text-light);
     border: none;
-    padding: 0.9rem;
+    padding: 1.3rem; 
     border-radius: 6px;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1.3rem; 
     font-weight: 700;
     text-transform: uppercase;
     margin-top: 1rem;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn-buscar:hover {
-    background-color: #2e8a7b;
+    background-color: #e66000;
+    transform: translateY(-1px);
 }
 
 .section-title {
     text-align: center;
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: var(--primary-blue);
     margin-top: 3rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    font-weight: 900;
+}
+
+/* === LISTAGEM DE IMÓVEIS (NOVO ESTILO CARD GRID) === */
+.imoveis-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Grid de 3 colunas */
+    gap: 2rem;
+}
+
+.imovel-card-item {
+    background: var(--white-bg);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.imovel-card-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.imovel-card-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.imovel-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.imovel-card-item:hover .imovel-card-image img {
+    transform: scale(1.05);
+}
+
+.imovel-card-content {
+    padding: 1.5rem;
+}
+
+.imovel-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 0.4rem 0;
+}
+
+.imovel-location {
+    color: #777;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.imovel-card-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.imovel-card-details span {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+}
+/* Placeholder para ícones, pois não temos uma biblioteca de ícones */
+.imovel-card-details [class^="icon-"]::before {
+    content: '• ';
+    color: var(--primary-blue);
+    font-weight: 900;
+}
+.imovel-card-details .icon-bed::before { content: '🛏️ '; }
+.imovel-card-details .icon-bath::before { content: '🛁 '; }
+.imovel-card-details .icon-area::before { content: '📐 '; }
+
+.imovel-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.imovel-price {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--primary-blue);
+    margin: 0;
+}
+
+/* BOTÃO AUMENTADO: Ver Detalhes */
+.btn-detalhes {
+    background-color: var(--accent-orange);
+    color: var(--text-light);
+    padding: 0.7rem 1.3rem; /* Aumentado */
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem; /* Aumentado */
+    transition: background-color 0.3s;
+}
+
+.btn-detalhes:hover {
+    background-color: #e66000;
+    text-decoration: none;
+}
+
+
+/* === FOOTER - DIREITOS RESERVADOS === */
+footer {
+    background-color: #002D62; /* Azul escuro sólido */
+    color: var(--text-light);
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: 3rem; 
+}
+
+.footer-copyright {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    font-size: 0.9rem;
+}
+
+.footer-copyright p {
+    margin: 0;
+}
+
+/* === BOTÕES WHATSAPP E ADMIN (MOVIMENTEI PARA CÁ) === */
+
+/* BOTÃO AUMENTADO: WhatsApp (Geral) */
+.btn-whatsapp {
+    display: block;
+    background-color: #25D366; /* Cor do WhatsApp */
+    color: var(--text-light);
+    padding: 1.1rem; /* Aumentado */
+    border-radius: 6px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+    font-size: 1.1rem; /* Aumentado */
+    text-align: center;
+}
+.btn-whatsapp:hover {
+    background-color: #128C7E;
+    text-decoration: none;
+}
+
+/* BOTÕES AUMENTADOS: Admin */
+.btn {
+    text-decoration: none;
+    padding: 0.8rem 1.2rem; /* Aumentado */
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 1rem; /* Aumentado */
+}
+.btn-approve {
+    background-color: #198754; /* Verde */
+    color: white;
+}
+.btn-approve:hover {
+    background-color: #157347;
+}
+.btn-reject {
+    background-color: #DC3545; /* Vermelho */
+    color: white;
+}
+.btn-reject:hover {
+    background-color: #BB2D3B;
 }
 
 /* === AJUSTES RESPONSIVOS === */
 @media (max-width: 992px) {
+    .search-banner {
+        height: auto; /* Altura automática em telas menores */
+        padding: 4rem 2rem; /* Mais padding vertical */
+    }
     .search-banner-content {
-        flex-direction: column;
-        gap: 2rem;
-        text-align: center;
-    }
-    .hero-text {
-        text-align: center;
-        max-width: none;
-    }
-    .hero-text h1 {
-        font-size: 2.2rem;
+        max-width: 90%;
     }
     .search-box {
-        margin-left: 0;
-        max-width: 80%;
+        max-width: 100%; /* Permite que o search-box use os 90% do content */
+        padding: 2rem; /* Padding menor em telas médias */
     }
-    .imovel-list-item {
-        flex-direction: column;
+    .search-fields-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
     }
-    .imovel-list-image {
-        width: 100%;
-        height: 250px;
+    .imoveis-list-container {
+        /* Permite que o grid se ajuste para 2 colunas */
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .main-header {
+        /* Ajuste do padding */
+        padding: 0.5rem 1rem;
+    }
+    .main-nav a {
+        padding: 1rem 0.5rem; /* Menor padding em telas médias */
+        font-size: 0.95rem;
+    }
+    .main-header .logo img {
+        max-width: 170px; /* Ajuste do logo em telas médias */
     }
 }
 
 @media (max-width: 768px) {
+    .main-nav {
+        flex-wrap: wrap; /* Permite que os links quebrem a linha */
+        justify-content: center;
+    }
+    .main-nav a {
+        padding: 0.5rem 0.5rem;
+    }
+    .search-box h3 {
+        font-size: 1.8rem; /* Reduz o título da busca em telas mobile */
+    }
+    .search-fields-grid {
+        grid-template-columns: 1fr 1fr; /* Força 2 colunas em mobile */
+    }
+    .top-nav {
+        font-size: 0.9rem; /* Ajuste da barra superior */
+    }
+    .main-header .logo img {
+        max-width: 150px; /* Logo menor em mobile */
+    }
+}
+
+
+@media (max-width: 600px) {
     .top-nav {
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.2rem;
+        padding: 0.5rem 1rem;
     }
     .main-header {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.5rem;
+    }
+    .main-header .logo img {
+        max-width: 120px;
+    }
+    .search-banner {
+        height: auto;
+        padding: 3rem 1rem;
+    }
+    .search-box {
+        padding: 1.5rem;
+    }
+    .imovel-card-item {
+        margin: 0 auto;
+        max-width: 400px;
+    }
+    .search-fields-grid {
+        /* Em telas muito pequenas, usa apenas uma coluna */
+        grid-template-columns: 1fr;
+    }
+    .main-nav a {
+        font-size: 0.9rem; /* Reduz a fonte do menu em telas pequenas */
+    }
+    .search-box select, .search-box input {
+        font-size: 1rem; /* Garante boa leitura em mobile */
+    }
+    .btn-buscar {
+        font-size: 1.1rem; /* Botão de busca menor em mobile */
+        padding: 1.1rem;
+    }
+    .btn-detalhes {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+    .btn-whatsapp {
+        padding: 1rem;
+        font-size: 1rem;
     }
 }

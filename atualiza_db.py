@@ -31,20 +31,30 @@ def update_db_schema(db_path='database.db'):
             vagas INTEGER,
             caracteristicas TEXT,
             contato TEXT
-            -- fotos e status serão adicionados abaixo se não existirem
+            -- fotos, status e operacao serão adicionados abaixo se não existirem
         )
     ''')
 
     # Verifica colunas da tabela imoveis
     cursor.execute("PRAGMA table_info(imoveis)")
     imoveis_cols = [col[1] for col in cursor.fetchall()]
+    
+    # Adicionando 'status'
     if 'status' not in imoveis_cols:
         cursor.execute("ALTER TABLE imoveis ADD COLUMN status TEXT DEFAULT 'pendente'")
         print("Coluna 'status' adicionada em 'imoveis'")
+        
+    # Adicionando 'fotos'
     if 'fotos' not in imoveis_cols:
         cursor.execute("ALTER TABLE imoveis ADD COLUMN fotos TEXT")
         print("Coluna 'fotos' adicionada em 'imoveis'")
 
+    # Adicionando 'operacao' <--- NOVO
+    if 'operacao' not in imoveis_cols:
+        # Define 'compra' como default para dados existentes
+        cursor.execute("ALTER TABLE imoveis ADD COLUMN operacao TEXT DEFAULT 'compra'") 
+        print("Coluna 'operacao' adicionada em 'imoveis'")
+        
     # Verifica colunas da tabela usuarios
     cursor.execute("PRAGMA table_info(usuarios)")
     usuarios_cols = [col[1] for col in cursor.fetchall()]
@@ -54,6 +64,9 @@ def update_db_schema(db_path='database.db'):
 
     # Garante que imóveis pendentes estejam atualizados
     cursor.execute("UPDATE imoveis SET status = 'pendente' WHERE status IS NULL OR status = ''")
+    
+    # Atualiza 'operacao' para 'compra' onde for nulo ou vazio
+    cursor.execute("UPDATE imoveis SET operacao = 'compra' WHERE operacao IS NULL OR operacao = ''") # Popula o valor padrão
 
     conn.commit()
     conn.close()
