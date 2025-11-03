@@ -206,4 +206,4 @@ if __name__ == '__main__':
         print("ℹ️ Admin já existe.")
     conn.close()
 
-    app.run(debug=True)
+    app.run(debug=True) 
