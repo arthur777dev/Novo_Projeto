@@ -13,7 +13,7 @@ def update_db_schema(db_path='database.db'):
             nome TEXT,
             telefone TEXT,
             endereco TEXT
-            -- is_admin será adicionada abaixo se não existir
+            -- is_admin, email, cpf serão adicionadas abaixo se não existirem
         )
     ''')
 
@@ -49,24 +49,39 @@ def update_db_schema(db_path='database.db'):
         cursor.execute("ALTER TABLE imoveis ADD COLUMN fotos TEXT")
         print("Coluna 'fotos' adicionada em 'imoveis'")
 
-    # Adicionando 'operacao' <--- NOVO
+    # Adicionando 'operacao'
     if 'operacao' not in imoveis_cols:
-        # Define 'compra' como default para dados existentes
         cursor.execute("ALTER TABLE imoveis ADD COLUMN operacao TEXT DEFAULT 'compra'") 
         print("Coluna 'operacao' adicionada em 'imoveis'")
         
     # Verifica colunas da tabela usuarios
     cursor.execute("PRAGMA table_info(usuarios)")
     usuarios_cols = [col[1] for col in cursor.fetchall()]
+    
+    # Adicionando 'is_admin'
     if 'is_admin' not in usuarios_cols:
         cursor.execute("ALTER TABLE usuarios ADD COLUMN is_admin INTEGER DEFAULT 0")
         print("Coluna 'is_admin' adicionada em 'usuarios'")
 
+    # === NOVAS COLUNAS PARA USUARIOS ===
+    # Adicionando 'email' (usado para login)
+    if 'email' not in usuarios_cols:
+        cursor.execute("ALTER TABLE usuarios ADD COLUMN email TEXT")
+        print("Coluna 'email' adicionada em 'usuarios'")
+        # Atualiza a coluna 'email' com os valores existentes de 'username'
+        cursor.execute("UPDATE usuarios SET email = username WHERE email IS NULL")
+        
+    # Adicionando 'cpf'
+    if 'cpf' not in usuarios_cols:
+        cursor.execute("ALTER TABLE usuarios ADD COLUMN cpf TEXT")
+        print("Coluna 'cpf' adicionada em 'usuarios'")
+    # ===================================
+        
     # Garante que imóveis pendentes estejam atualizados
     cursor.execute("UPDATE imoveis SET status = 'pendente' WHERE status IS NULL OR status = ''")
     
     # Atualiza 'operacao' para 'compra' onde for nulo ou vazio
-    cursor.execute("UPDATE imoveis SET operacao = 'compra' WHERE operacao IS NULL OR operacao = ''") # Popula o valor padrão
+    cursor.execute("UPDATE imoveis SET operacao = 'compra' WHERE operacao IS NULL OR operacao = ''")
 
     conn.commit()
     conn.close()

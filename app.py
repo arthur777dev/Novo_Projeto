@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-from werkzeug.utils import secure_filename
 from functools import wraps
 import uuid
 
@@ -117,7 +116,8 @@ def imovel_detalhe(imovel_id):
         return redirect(url_for('index'))
 
     # Prepara a lista de fotos e características
-    fotos_list = imovel['fotos'].split(',') if imovel['fotos'] else []
+    # Filtra fotos vazias
+    fotos_list = [f for f in imovel['fotos'].split(',') if f.strip()] if imovel['fotos'] else []
     caracteristicas_list = imovel['caracteristicas'].split(',') if imovel['caracteristicas'] else []
         
     return render_template('imovel_detalhe.html', imovel=imovel, fotos_list=fotos_list, caracteristicas_list=caracteristicas_list)
@@ -137,18 +137,33 @@ def contato():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        # MUDANÇA: Login agora usa 'email'
+        email = request.form['email']
         password = request.form['password']
         conn = get_db()
-        user = conn.execute('SELECT * FROM usuarios WHERE username = ?', (username,)).fetchone()
+        # MUDANÇA: Buscar pelo novo campo 'email'
+        user = conn.execute('SELECT * FROM usuarios WHERE email = ?', (email,)).fetchone()
         conn.close()
         if user and check_password_hash(user['password'], password):
             session['user_id'] = user['id']
-            session['username'] = user['username']
+            
+            # MUDANÇA: Armazenar o primeiro nome para exibição no topo
+            full_name = user['nome']
+            if full_name:
+                # Pega apenas o primeiro nome
+                first_name = full_name.split()[0]
+            else:
+                # Fallback para o email se o nome for nulo
+                first_name = user['email'] 
+                
+            session['first_name'] = first_name
+
+            # Mantém session['username'] (que agora armazena o email) para compatibilidade 
+            session['username'] = user['username'] 
             session['is_admin'] = user['is_admin']
             return redirect(url_for('index'))
         else:
-            flash('Usuário ou senha inválidos!', 'error')
+            flash('E-mail ou senha inválidos!', 'error')
             return redirect(url_for('login'))
     return render_template('login.html')
 
@@ -212,24 +227,32 @@ def register():
     if request.method == 'POST':
         nome = request.form['nome']
         telefone = request.form['telefone']
-        endereco = request.form['endereco']
-        username = request.form['username']
+        # MUDANÇA: Novo campo de e-mail e cpf do formulário
+        email = request.form['email'] 
+        cpf = request.form['cpf']
+        # O campo 'username' é preenchido com o 'email' para compatibilidade com o DB.
+        username_for_db = email 
+        
         password = request.form['password']
         hashed_password = generate_password_hash(password)
 
         try:
             conn = get_db()
+            # MUDANÇA: Atualizado o INSERT para incluir 'email' e 'cpf' e remover 'endereco'.
             conn.execute('''
-                INSERT INTO usuarios (username, password, nome, telefone, endereco, is_admin)
-                VALUES (?, ?, ?, ?, ?, 0)
-            ''', (username, hashed_password, nome, telefone, endereco))
+                INSERT INTO usuarios (username, password, nome, telefone, is_admin, email, cpf)
+                VALUES (?, ?, ?, ?, 0, ?, ?)
+            ''', (username_for_db, hashed_password, nome, telefone, email, cpf))
             conn.commit()
             conn.close()
             flash('Conta criada com sucesso! Faça o login.', 'success')
-            return redirect(url_for('login'))
-        except sqlite3.IntegrityError:
-            flash('Este nome de usuário já existe. Tente outro.', 'error')
+        except sqlite3.IntegrityError as e:
+            if 'username' in str(e) or 'email' in str(e):
+                flash('Este e-mail já está em uso. Tente outro.', 'error')
+            else:
+                flash('Erro ao registrar. Tente novamente.', 'error')
             return redirect(url_for('register'))
+        return redirect(url_for('login'))
     return render_template('register.html')
 
 @app.route('/admin/imoveis')
@@ -266,11 +289,13 @@ if __name__ == '__main__':
     update_db_schema()
 
     conn = get_db()
-    admin_user = conn.execute("SELECT * FROM usuarios WHERE username = 'admin'").fetchone()
+    # MUDANÇA: Admin verificado por e-mail
+    admin_user = conn.execute("SELECT * FROM usuarios WHERE email = 'admin@jtfimoveis.com.br'").fetchone()
     if not admin_user:
+        # MUDANÇA: Inserção com campos email e is_admin. Senha: '123456'
         conn.execute(
-            "INSERT INTO usuarios (username, password, nome, is_admin) VALUES (?, ?, ?, ?)",
-            ('admin', generate_password_hash('123456'), 'Administrador', 1)
+            "INSERT INTO usuarios (username, password, nome, is_admin, email) VALUES (?, ?, ?, ?, ?)",
+            ('admin@jtfimoveis.com.br', generate_password_hash('123456'), 'Administrador', 1, 'admin@jtfimoveis.com.br')
         )
         conn.commit()
         print("✅ Admin criado com sucesso!")

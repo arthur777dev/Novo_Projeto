@@ -10,11 +10,11 @@
     <header>
         <div class="top-nav">
             <div class="contact-info">
-                <span>(11) 9999-9999 | contato@jtfimoveis.com.br</span>
+                <span><a href="https://api.whatsapp.com/send?phone=556592781542" target="_blank" style="color: inherit; text-decoration: none;">(65) 9278-1542</a> | contato@jtfimoveis.com.br</span>
             </div>
             <div class="user-actions">
                 {% if session.get('username') %}
-                    <span>Olá, {{ session['username'] }}</span>
+                    <span>Olá, {{ session.get('first_name') }}</span>
                     <a href="{{ url_for('logout') }}">Sair</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">Login</a>
@@ -60,7 +60,7 @@
 
     <footer>
         <div class="footer-copyright">
-            <p>&copy; 2024 JTF Imóveis - Todos os direitos reservados.</p>
+            <p>&copy; 2025 JTF Imóveis - Todos os direitos reservados.</p>
         </div>
     </footer>
 </body>

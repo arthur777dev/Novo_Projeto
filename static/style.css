@@ -114,14 +114,24 @@ h2 {
     margin: 2rem auto;
 }
 
+/* Ajustes para forçar labels e inputs a serem elementos de bloco (quebra de linha) */
+.form-container label {
+    font-weight: 500;
+    display: block; /* Garante que o rótulo ocupe a linha inteira */
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
 .form-container input[type="text"],
-.form-container input[type="password"] {
+.form-container input[type="password"],
+.form-container input[type="email"] { /* Adicionado input[type="email"] e display: block */
      width: 100%;
     padding: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1rem; /* Aumenta a separação entre os campos */
     border: 1px solid var(--border-color);
     border-radius: 6px;
     box-sizing: border-box;
+    display: block; /* Garante que o input também seja um elemento de bloco */
 }
 
 /* BOTÃO AUMENTADO: Login/Registro */
@@ -415,6 +425,8 @@ h2 {
 }
 
 .imovel-card-image {
+    /* CORREÇÃO: Adiciona fundo branco para preencher o espaço vazio com object-fit: contain */
+    background-color: var(--white-bg); 
     position: relative;
     height: 220px;
     overflow: hidden;
@@ -423,7 +435,8 @@ h2 {
 .imovel-card-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    /* CORREÇÃO: Usa 'contain' para mostrar a imagem completa sem cortar */
+    object-fit: contain;
     transition: transform 0.5s ease;
 }
 
